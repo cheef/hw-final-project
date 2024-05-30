@@ -1,0 +1,9 @@
+[GRPC]
+port = 44044
+
+[BFALimits]
+login = 10
+password = 100
+IP = 1000
+period = 60000
+bucket_lifetime = 120000

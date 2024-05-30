@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package bfa_protection;
+option go_package = "github.com/cheef/hw-final-project/pkg/server/grpc/bfa_protection";
+
+service BFAProtection {
+  rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse);
+  rpc FlushBucket(FlushBucketRequest) returns (google.protobuf.Empty) {};
+  rpc BlacklistAdd(IPRequest) returns (google.protobuf.Empty) {};
+  rpc BlacklistRemove(IPRequest) returns (google.protobuf.Empty) {};
+  rpc WhitelistAdd(IPRequest) returns (google.protobuf.Empty) {};
+  rpc WhitelistRemove(IPRequest) returns (google.protobuf.Empty) {};
+}
+
+message AuthorizeRequest {
+  string login = 1;
+  string password = 2;
+  string ip = 3;
+}
+
+message AuthorizeResponse {
+  bool ok = 1;
+}
+
+message FlushBucketRequest {
+  string login = 1;
+  string ip = 2;
+}
+
+message IPRequest {
+  string ip = 1;
+}
