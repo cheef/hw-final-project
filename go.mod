@@ -5,6 +5,7 @@ go 1.21
 require (
 	github.com/golang/protobuf v1.5.4
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
+	github.com/lib/pq v1.10.9
 	github.com/pelletier/go-toml/v2 v2.2.2
 	github.com/stretchr/testify v1.9.0
 	google.golang.org/grpc v1.64.0

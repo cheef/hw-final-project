@@ -11,6 +11,7 @@ import (
 type Config struct {
 	GRPC      GRPCConfig
 	BFALimits BFALimitsConfig
+	Storage   Storage
 }
 
 type GRPCConfig struct {
@@ -23,6 +24,13 @@ type BFALimitsConfig struct {
 	IP             int
 	Period         int
 	BucketLifetime int
+}
+
+type Storage struct {
+	DSN                   string
+	MaxOpenConnections    int
+	MaxIdleConnections    int
+	ConnectionMaxLifetime int
 }
 
 func Load() (*Config, error) {

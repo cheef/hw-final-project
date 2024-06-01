@@ -8,10 +8,10 @@ option go_package = "github.com/cheef/hw-final-project/pkg/server/grpc/bfa_prote
 service BFAProtection {
   rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse);
   rpc FlushBucket(FlushBucketRequest) returns (google.protobuf.Empty) {};
-  rpc BlacklistAdd(IPRequest) returns (google.protobuf.Empty) {};
-  rpc BlacklistRemove(IPRequest) returns (google.protobuf.Empty) {};
-  rpc WhitelistAdd(IPRequest) returns (google.protobuf.Empty) {};
-  rpc WhitelistRemove(IPRequest) returns (google.protobuf.Empty) {};
+  rpc BlacklistAdd(CIDRRequest) returns (google.protobuf.Empty) {};
+  rpc BlacklistRemove(CIDRRequest) returns (google.protobuf.Empty) {};
+  rpc WhitelistAdd(CIDRRequest) returns (google.protobuf.Empty) {};
+  rpc WhitelistRemove(CIDRRequest) returns (google.protobuf.Empty) {};
 }
 
 message AuthorizeRequest {
@@ -29,6 +29,6 @@ message FlushBucketRequest {
   string ip = 2;
 }
 
-message IPRequest {
-  string ip = 1;
+message CIDRRequest {
+  string cidr = 1;
 }
