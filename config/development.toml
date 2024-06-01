@@ -7,3 +7,9 @@ password = 100
 IP = 1000
 period = 60000
 bucket_lifetime = 120000
+
+[Storage]
+DSN = "postgresql://postgres@127.0.0.1:5432/bfa_protection?sslmode=disable"
+max_open_connections = 25
+max_idle_connections = 26
+connection_max_lifetime = 60

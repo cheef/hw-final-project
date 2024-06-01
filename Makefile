@@ -2,7 +2,7 @@ BIN := "./bin/bfa-protection-server"
 GIT_HASH := $(shell git log --format="%h" -n 1)
 LDFLAGS := -X main.release="develop" -X main.buildDate=$(shell date -u +%Y-%m-%dT%H:%M:%S) -X main.gitHash=$(GIT_HASH)
 
-build: ## Builds application
+build: clean ## Builds application
 	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" ./cmd/bfa-protection
 
 clean:
@@ -31,15 +31,21 @@ lint:
 	go install golang.org/x/lint/golint@latest
 	golint ./...
 
+migrate-down: ## Run migrations down
+	migrate -database postgres://postgres@localhost:5432/bfa_protection?sslmode=disable -path ./db/migrations down
+
+migrate-up: ## Run migrations upfront
+	migrate -database postgres://postgres@localhost:5432/bfa_protection?sslmode=disable -path ./db/migrations up
+
 run: build ## Run application
 	$(BIN)
 
 test: ## Run tests
-	$(BIN) &
+	$(BIN) > /dev/null &
 	go test ./... ${GO_TEST_OPTIONS}
 
 test-race:	## Run tests with race checks
-	$(BIN) &
+	$(BIN) > /dev/null &
 	go test -race ./... ${GO_TEST_OPTIONS}
 
-.PHONY: build clean compile-proto help lint run test test-race
+.PHONY: build clean compile-proto help lint migrate-down migrate-up run test test-race

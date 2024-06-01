@@ -34,10 +34,10 @@ const (
 type BFAProtectionClient interface {
 	Authorize(ctx context.Context, in *AuthorizeRequest, opts ...grpc.CallOption) (*AuthorizeResponse, error)
 	FlushBucket(ctx context.Context, in *FlushBucketRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	BlacklistAdd(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	BlacklistRemove(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	WhitelistAdd(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	WhitelistRemove(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	BlacklistAdd(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	BlacklistRemove(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	WhitelistAdd(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	WhitelistRemove(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type bFAProtectionClient struct {
@@ -66,7 +66,7 @@ func (c *bFAProtectionClient) FlushBucket(ctx context.Context, in *FlushBucketRe
 	return out, nil
 }
 
-func (c *bFAProtectionClient) BlacklistAdd(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bFAProtectionClient) BlacklistAdd(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BFAProtection_BlacklistAdd_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -75,7 +75,7 @@ func (c *bFAProtectionClient) BlacklistAdd(ctx context.Context, in *IPRequest, o
 	return out, nil
 }
 
-func (c *bFAProtectionClient) BlacklistRemove(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bFAProtectionClient) BlacklistRemove(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BFAProtection_BlacklistRemove_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -84,7 +84,7 @@ func (c *bFAProtectionClient) BlacklistRemove(ctx context.Context, in *IPRequest
 	return out, nil
 }
 
-func (c *bFAProtectionClient) WhitelistAdd(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bFAProtectionClient) WhitelistAdd(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BFAProtection_WhitelistAdd_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -93,7 +93,7 @@ func (c *bFAProtectionClient) WhitelistAdd(ctx context.Context, in *IPRequest, o
 	return out, nil
 }
 
-func (c *bFAProtectionClient) WhitelistRemove(ctx context.Context, in *IPRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bFAProtectionClient) WhitelistRemove(ctx context.Context, in *CIDRRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BFAProtection_WhitelistRemove_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -108,10 +108,10 @@ func (c *bFAProtectionClient) WhitelistRemove(ctx context.Context, in *IPRequest
 type BFAProtectionServer interface {
 	Authorize(context.Context, *AuthorizeRequest) (*AuthorizeResponse, error)
 	FlushBucket(context.Context, *FlushBucketRequest) (*empty.Empty, error)
-	BlacklistAdd(context.Context, *IPRequest) (*empty.Empty, error)
-	BlacklistRemove(context.Context, *IPRequest) (*empty.Empty, error)
-	WhitelistAdd(context.Context, *IPRequest) (*empty.Empty, error)
-	WhitelistRemove(context.Context, *IPRequest) (*empty.Empty, error)
+	BlacklistAdd(context.Context, *CIDRRequest) (*empty.Empty, error)
+	BlacklistRemove(context.Context, *CIDRRequest) (*empty.Empty, error)
+	WhitelistAdd(context.Context, *CIDRRequest) (*empty.Empty, error)
+	WhitelistRemove(context.Context, *CIDRRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedBFAProtectionServer()
 }
 
@@ -125,16 +125,16 @@ func (UnimplementedBFAProtectionServer) Authorize(context.Context, *AuthorizeReq
 func (UnimplementedBFAProtectionServer) FlushBucket(context.Context, *FlushBucketRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FlushBucket not implemented")
 }
-func (UnimplementedBFAProtectionServer) BlacklistAdd(context.Context, *IPRequest) (*empty.Empty, error) {
+func (UnimplementedBFAProtectionServer) BlacklistAdd(context.Context, *CIDRRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlacklistAdd not implemented")
 }
-func (UnimplementedBFAProtectionServer) BlacklistRemove(context.Context, *IPRequest) (*empty.Empty, error) {
+func (UnimplementedBFAProtectionServer) BlacklistRemove(context.Context, *CIDRRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BlacklistRemove not implemented")
 }
-func (UnimplementedBFAProtectionServer) WhitelistAdd(context.Context, *IPRequest) (*empty.Empty, error) {
+func (UnimplementedBFAProtectionServer) WhitelistAdd(context.Context, *CIDRRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistAdd not implemented")
 }
-func (UnimplementedBFAProtectionServer) WhitelistRemove(context.Context, *IPRequest) (*empty.Empty, error) {
+func (UnimplementedBFAProtectionServer) WhitelistRemove(context.Context, *CIDRRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhitelistRemove not implemented")
 }
 func (UnimplementedBFAProtectionServer) mustEmbedUnimplementedBFAProtectionServer() {}
@@ -187,7 +187,7 @@ func _BFAProtection_FlushBucket_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _BFAProtection_BlacklistAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IPRequest)
+	in := new(CIDRRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -199,13 +199,13 @@ func _BFAProtection_BlacklistAdd_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: BFAProtection_BlacklistAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BFAProtectionServer).BlacklistAdd(ctx, req.(*IPRequest))
+		return srv.(BFAProtectionServer).BlacklistAdd(ctx, req.(*CIDRRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _BFAProtection_BlacklistRemove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IPRequest)
+	in := new(CIDRRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -217,13 +217,13 @@ func _BFAProtection_BlacklistRemove_Handler(srv interface{}, ctx context.Context
 		FullMethod: BFAProtection_BlacklistRemove_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BFAProtectionServer).BlacklistRemove(ctx, req.(*IPRequest))
+		return srv.(BFAProtectionServer).BlacklistRemove(ctx, req.(*CIDRRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _BFAProtection_WhitelistAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IPRequest)
+	in := new(CIDRRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -235,13 +235,13 @@ func _BFAProtection_WhitelistAdd_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: BFAProtection_WhitelistAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BFAProtectionServer).WhitelistAdd(ctx, req.(*IPRequest))
+		return srv.(BFAProtectionServer).WhitelistAdd(ctx, req.(*CIDRRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _BFAProtection_WhitelistRemove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IPRequest)
+	in := new(CIDRRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -253,7 +253,7 @@ func _BFAProtection_WhitelistRemove_Handler(srv interface{}, ctx context.Context
 		FullMethod: BFAProtection_WhitelistRemove_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BFAProtectionServer).WhitelistRemove(ctx, req.(*IPRequest))
+		return srv.(BFAProtectionServer).WhitelistRemove(ctx, req.(*CIDRRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

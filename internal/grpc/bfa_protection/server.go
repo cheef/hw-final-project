@@ -9,11 +9,11 @@ import (
 
 type BFAProtection interface {
 	Authorize(ctx context.Context, login, password, ip string) (bool, error)
-	FlushBucket(ctx context.Context, login, password string) error
-	BlacklistAdd(ctx context.Context, ip string) error
-	BlacklistRemove(ctx context.Context, ip string) error
-	WhitelistAdd(ctx context.Context, ip string) error
-	WhitelistRemove(ctx context.Context, ip string) error
+	FlushBucket(ctx context.Context, login, ip string) error
+	BlacklistAdd(ctx context.Context, cidr string) error
+	BlacklistRemove(ctx context.Context, cidr string) error
+	WhitelistAdd(ctx context.Context, cidr string) error
+	WhitelistRemove(ctx context.Context, cidr string) error
 }
 
 type serverAPI struct {
@@ -37,26 +37,26 @@ func (s *serverAPI) FlushBucket(ctx context.Context, req *pb.FlushBucketRequest)
 	return &empty.Empty{}, err
 }
 
-func (s *serverAPI) BlacklistAdd(ctx context.Context, req *pb.IPRequest) (*empty.Empty, error) {
-	err := s.repo.BlacklistAdd(ctx, req.GetIp())
+func (s *serverAPI) BlacklistAdd(ctx context.Context, req *pb.CIDRRequest) (*empty.Empty, error) {
+	err := s.repo.BlacklistAdd(ctx, req.GetCidr())
 
 	return &empty.Empty{}, err
 }
 
-func (s *serverAPI) BlacklistRemove(ctx context.Context, req *pb.IPRequest) (*empty.Empty, error) {
-	err := s.repo.BlacklistRemove(ctx, req.GetIp())
+func (s *serverAPI) BlacklistRemove(ctx context.Context, req *pb.CIDRRequest) (*empty.Empty, error) {
+	err := s.repo.BlacklistRemove(ctx, req.GetCidr())
 
 	return &empty.Empty{}, err
 }
 
-func (s *serverAPI) WhitelistAdd(ctx context.Context, req *pb.IPRequest) (*empty.Empty, error) {
-	err := s.repo.WhitelistAdd(ctx, req.GetIp())
+func (s *serverAPI) WhitelistAdd(ctx context.Context, req *pb.CIDRRequest) (*empty.Empty, error) {
+	err := s.repo.WhitelistAdd(ctx, req.GetCidr())
 
 	return &empty.Empty{}, err
 }
 
-func (s *serverAPI) WhitelistRemove(ctx context.Context, req *pb.IPRequest) (*empty.Empty, error) {
-	err := s.repo.WhitelistRemove(ctx, req.GetIp())
+func (s *serverAPI) WhitelistRemove(ctx context.Context, req *pb.CIDRRequest) (*empty.Empty, error) {
+	err := s.repo.WhitelistRemove(ctx, req.GetCidr())
 
 	return &empty.Empty{}, err
 }
