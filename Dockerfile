@@ -1,11 +1,14 @@
-FROM golang:1.21 as base
+FROM golang:1.21 as build
 
 WORKDIR /app
 COPY go.mod go.sum ./
-RUN go mod download
-COPY *.go ./
-RUN CGO_ENABLED=0 GOOS=linux make build
+RUN go get -d -v ./...
+COPY . .
+RUN go build -v -o server ./cmd/bfa-protection & \
+    go build -v -o cli  ./cmd/bfa-protection-cli
 
+FROM ubuntu:latest
+WORKDIR /app
+COPY --from=build /app/bin/. .
 EXPOSE 44044
-
-CMD ["/bin/bfa-protection-server"]
+ENTRYPOINT [ "/app/main"]
