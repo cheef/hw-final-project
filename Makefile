@@ -1,12 +1,14 @@
-BIN := "./bin/bfa-protection-server"
+BIN := "./bin/server"
+CLI := "./bin/cli"
 GIT_HASH := $(shell git log --format="%h" -n 1)
 LDFLAGS := -X main.release="develop" -X main.buildDate=$(shell date -u +%Y-%m-%dT%H:%M:%S) -X main.gitHash=$(GIT_HASH)
 
 build: clean ## Builds application
 	go build -v -o $(BIN) -ldflags "$(LDFLAGS)" ./cmd/bfa-protection
+	go build -v -o $(CLI) -ldflags "$(LDFLAGS)" ./cmd/bfa-protection-cli
 
 clean:
-	rm -rf $(BIN)
+	rm -rf $(BIN) $(CLI)
 
 compile-proto: ## Generates proto code
 	protoc --go_out=pkg/server/grpc/ --go_opt=paths=source_relative \
@@ -28,8 +30,7 @@ help:	## Show this help
 	@echo
 
 lint:
-	go install golang.org/x/lint/golint@latest
-	golint ./...
+	golangci-lint run --fix
 
 migrate-down: ## Run migrations down
 	migrate -database postgres://postgres@localhost:5432/bfa_protection?sslmode=disable -path ./db/migrations down
