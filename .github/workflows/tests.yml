@@ -1,0 +1,61 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, feat/grpc-api]
+  pull_request:
+    branches: [main, feat/grpc-api]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ^1.21.5
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Linters
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.58
+
+  tests:
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_DB: bfa_protection
+          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ^1.21.5
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: Verify dependencies
+        run: go mod verify
+      - name: Install golang-migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-amd64.tar.gz | tar xvz
+          sudo mv migrate /usr/bin/migrate
+          which migrate
+      - name: Run migrations
+        run: make migrate-up
+      - name: Build
+        run: make build
+      - name: Run tests
+        run: |
+          ./bin/server &
+          go test -race ./...

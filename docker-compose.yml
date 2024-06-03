@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      CONFIG_PATH: /app/config/development.toml
+      STORAGE_DSN: postgresql://postgres@pg-host:5432/bfa_protection?sslmode=disable
+    entrypoint: "/app/bin/server"
+    ports:
+      - "44044:44044"
+    volumes:
+      - .:/app
+    links:
+      - postgres
+    networks:
+      - bfa-protection
+
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: bfa_protection
+      POSTGRES_PASSWORD: ""
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - bfa-protection
+    hostname: pg-host
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "bfa_protection"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  migrate:
+    image: migrate/migrate
+    networks:
+      - bfa-protection
+    volumes:
+      - ./db/migrations:/migrations
+    command: ["-path", "/migrations", "-database",  "postgresql://postgres@pg-host:5432/bfa_protection?sslmode=disable", "up", "1"]
+    links:
+      - postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  db-data:
+
+networks:
+  bfa-protection:
+    name: shared-network
+
