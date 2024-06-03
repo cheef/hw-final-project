@@ -39,14 +39,13 @@ migrate-up: ## Run migrations upfront
 	migrate -database postgres://postgres@localhost:5432/bfa_protection?sslmode=disable -path ./db/migrations up
 
 run: build ## Run application
-	$(BIN)
+	docker compose build
+	docker compose up
 
 test: ## Run tests
-	$(BIN) > /dev/null &
 	go test ./... ${GO_TEST_OPTIONS}
 
-test-race:	## Run tests with race checks
-	$(BIN) > /dev/null &
+test-race: ## Run tests with race checks
 	go test -race ./... ${GO_TEST_OPTIONS}
 
 .PHONY: build clean compile-proto help lint migrate-down migrate-up run test test-race

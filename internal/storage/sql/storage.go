@@ -8,6 +8,7 @@ import (
 	"github.com/cheef/hw-final-project/internal/domain/models"
 	_ "github.com/lib/pq"
 	"log/slog"
+	"os"
 	"time"
 )
 
@@ -34,7 +35,9 @@ func NewStorage(_ context.Context, cfg config.Storage, log *slog.Logger) (*Stora
 func (s *Storage) Connect(cfg config.Storage) (*sql.DB, error) {
 	const op = "sql.Open"
 
-	db, err := sql.Open("postgres", cfg.DSN)
+	dsn := GetStorageDSN(cfg)
+	s.log.Debug("Connecting to storage", slog.String("DSN", dsn))
+	db, err := sql.Open("postgres", dsn)
 
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
@@ -132,4 +135,14 @@ func (s *Storage) ShowExceptionLists(_ context.Context) ([]models.ExceptionList,
 	}
 
 	return exceptions, nil
+}
+
+func GetStorageDSN(cfg config.Storage) string {
+	res := os.Getenv("STORAGE_DSN")
+
+	if res != "" {
+		return res
+	}
+
+	return cfg.DSN
 }
